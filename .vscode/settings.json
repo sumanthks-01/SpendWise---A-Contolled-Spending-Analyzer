@@ -1,0 +1,12 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "files.exclude": {
+    "**/.git": true,
+    "**/target": false
+  },
+  "maven.terminal.useJavaHome": true,
+  "spring-boot.ls.problem.application-properties.UNKNOWN_PROPERTY_KEY": "IGNORE"
+}

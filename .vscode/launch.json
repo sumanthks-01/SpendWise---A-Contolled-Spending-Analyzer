@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "SpendWise (Spring Boot)",
+      "request": "launch",
+      "mainClass": "com.spendwise.SpendWiseApplication",
+      "projectName": "SpendWise",
+      "args": "",
+      "vmArgs": "",
+      "env": {},
+      "console": "integratedTerminal"
+    }
+  ]
+}
