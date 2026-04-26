@@ -1,309 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SpendWise – Track subscriptions and expenses across multiple currencies. Know exactly where your money goes." />
+  <meta name="description"
+    content="SpendWise – Track subscriptions and expenses across multiple currencies. Know exactly where your money goes." />
   <title>SpendWise – Smart Expense Tracker</title>
   <link rel="stylesheet" href="/css/style.css" />
   <!-- Chart.js for pie/doughnut chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 
-<!-- ══ Sidebar overlay (mobile backdrop) ════════════════════════════ -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <!-- ══ Sidebar overlay (mobile backdrop) ════════════════════════════ -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- ══ Sidebar ═══════════════════════════════════════════════════════ -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-text">💰 SpendWise</div>
-    <div class="logo-sub">Smart Expense Tracker v2.0</div>
-  </div>
+  <!-- ══ Sidebar ═══════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">💰 SpendWise</div>
+      <div class="logo-sub">Smart Expense Tracker v2.0</div>
+    </div>
 
-  <nav class="sidebar-nav">
-    <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
-      <span class="nav-icon">🏠</span> Dashboard
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">🏠</span> Dashboard
+      </button>
+      <button class="nav-btn" id="nav-subscriptions" onclick="navigate('subscriptions')">
+        <span class="nav-icon">📋</span> Subscriptions
+      </button>
+      <button class="nav-btn" id="nav-converter" onclick="navigate('converter')">
+        <span class="nav-icon">💱</span> Converter
+      </button>
+      <button class="nav-btn" id="nav-settings" onclick="navigate('settings')">
+        <span class="nav-icon">⚙️</span> Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Made with ☕ &amp; Java &nbsp;|&nbsp; SpendWise v2.0
+    </div>
+  </aside>
+
+  <!-- ══ Mobile top header ═════════════════════════════════════════════ -->
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
+    <span class="mobile-title">💰 SpendWise</span>
+  </header>
+
+  <!-- ══ Main content ══════════════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ─── DASHBOARD ─────────────────────────────────────────────────── -->
+    <section class="section active" id="section-dashboard">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle" id="dash-date">Loading...</p>
+
+      <!-- Stats cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Monthly Total</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-hint" id="stat-currency-hint">in home currency</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Budget Limit</div>
+          <div class="stat-value" id="stat-budget">—</div>
+          <div class="stat-hint" id="stat-budget-status">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Subscriptions</div>
+          <div class="stat-value" id="stat-count">—</div>
+          <div class="stat-hint">tracked services</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Upcoming Renewals</div>
+          <div class="stat-value warning" id="stat-upcoming">—</div>
+          <div class="stat-hint">within 7 days</div>
+        </div>
+      </div>
+
+      <!-- Dashboard grid: chart + upcoming -->
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title">📊 Spending by Category</div>
+          <div class="chart-wrap">
+            <canvas id="spendingChart"></canvas>
+          </div>
+          <div id="chart-empty" class="empty-state" style="display:none;">
+            <div class="empty-icon">📊</div>
+            <p>Add subscriptions to see your spending chart</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🔔 Upcoming Renewals</div>
+          <div id="upcoming-list">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SUBSCRIPTIONS ─────────────────────────────────────────────── -->
+    <section class="section" id="section-subscriptions">
+      <div class="flex-between" style="margin-bottom:8px;">
+        <div>
+          <h1 class="page-title">Subscriptions</h1>
+          <p class="page-subtitle">Manage all your recurring expenses</p>
+        </div>
+        <button class="btn btn-primary" onclick="toggleAddForm()">
+          ＋ Add New
+        </button>
+      </div>
+
+      <!-- Add form (hidden by default) -->
+      <div class="card mt-16" id="add-form-card" style="display:none; margin-bottom:20px;">
+        <div class="card-title">➕ Add Subscription</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="f-name">Service Name *</label>
+            <input class="form-control" id="f-name" type="text" placeholder="e.g. Netflix" />
+          </div>
+          <div class="form-group">
+            <label for="f-amount">Amount *</label>
+            <input class="form-control" id="f-amount" type="number" step="0.01" min="0" placeholder="9.99" />
+          </div>
+          <div class="form-group">
+            <label for="f-currency">Currency *</label>
+            <select class="form-control" id="f-currency">
+              <option value="INR">INR – Indian Rupee</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-category">Category</label>
+            <select class="form-control" id="f-category">
+              <option value="Entertainment">Entertainment</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Health">Health</option>
+              <option value="Work">Work</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-cycle">Billing Cycle</label>
+            <select class="form-control" id="f-cycle">
+              <option value="Monthly">Monthly</option>
+              <option value="Yearly">Yearly</option>
+              <option value="Weekly">Weekly</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-date">Next Renewal Date</label>
+            <input class="form-control" id="f-date" type="date" />
+          </div>
+        </div>
+        <div class="flex gap-8">
+          <button class="btn btn-primary" onclick="addSubscription()">Save Subscription</button>
+          <button class="btn btn-outline" onclick="toggleAddForm()">Cancel</button>
+        </div>
+        <div id="form-error" class="danger text-sm mt-16" style="display:none;"></div>
+      </div>
+
+      <!-- Subscriptions table -->
+      <div class="card">
+        <div class="table-wrap">
+          <table id="subs-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Amount</th>
+                <th>Monthly (Home)</th>
+                <th>Category</th>
+                <th>Renewal Date</th>
+                <th>Days Left</th>
+                <th>Cycle</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="subs-tbody">
+              <tr>
+                <td colspan="8" style="text-align:center;padding:32px;">
+                  <div class="spinner"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="subs-empty" class="empty-state" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <p>No subscriptions yet. Click <strong>Add New</strong> to get started.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CURRENCY CONVERTER ────────────────────────────────────────── -->
+    <section class="section" id="section-converter">
+      <h1 class="page-title">Currency Converter</h1>
+      <p class="page-subtitle">Live exchange rates powered by Frankfurter.app</p>
+
+      <div class="card converter-wrap">
+        <div class="card-title">💱 Convert Currency</div>
+
+        <div class="converter-row">
+          <div class="form-group">
+            <label for="conv-from">From</label>
+            <select class="form-control" id="conv-from"></select>
+          </div>
+          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
+          <div class="form-group">
+            <label for="conv-to">To</label>
+            <select class="form-control" id="conv-to"></select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="conv-amount">Amount</label>
+          <input class="form-control" id="conv-amount" type="number" value="1" step="0.01" min="0" />
+        </div>
+
+        <button class="btn btn-primary" onclick="convertCurrency()" style="width:100%;">
+          Convert
+        </button>
+
+        <div class="converter-result" id="conv-result" style="display:none; margin-top:16px;">
+          <div class="result-amount" id="conv-result-amount">—</div>
+          <div class="result-rate" id="conv-result-rate">—</div>
+        </div>
+      </div>
+
+      <!-- Live rates panel -->
+      <div class="card mt-16">
+        <div class="flex-between">
+          <div class="card-title" style="margin-bottom:0;">📈 Live Rates</div>
+          <select class="form-control" id="rates-base" style="width:auto;" onchange="loadRates()"></select>
+        </div>
+        <div id="rates-grid" class="rates-grid">
+          <div class="spinner"></div>
+        </div>
+        <p class="text-sm text-muted mt-16" id="rates-timestamp"></p>
+      </div>
+    </section>
+
+    <!-- ─── SETTINGS ──────────────────────────────────────────────────── -->
+    <section class="section" id="section-settings">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Preferences are saved automatically and persist across restarts</p>
+
+      <div class="settings-group">
+        <!-- Home currency -->
+        <div class="settings-row">
+          <label>🏠 Home Currency</label>
+          <p class="text-sm text-muted" style="margin-bottom:10px;">
+            All totals and charts are shown in this currency
+          </p>
+          <div class="flex gap-8">
+            <select class="form-control" id="s-home-currency" style="flex:1;"></select>
+            <button class="btn btn-primary" onclick="saveHomeCurrency()">Save</button>
+          </div>
+        </div>
+
+        <!-- Budget limit -->
+        <div class="settings-row">
+          <label>💰 Monthly Budget Limit</label>
+          <p class="text-sm text-muted" style="margin-bottom:10px;">
+            You'll see a warning when total spending exceeds this amount
+          </p>
+          <div class="flex gap-8">
+            <input class="form-control" id="s-budget" type="number" placeholder="e.g. 5000" style="flex:1;" />
+            <button class="btn btn-primary" onclick="saveBudget()">Save</button>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="settings-row">
+          <label>ℹ️ About SpendWise</label>
+          <p class="text-sm text-muted">Version 2.0 &nbsp;|&nbsp; Java 26 + Spring Boot 3.4</p>
+          <p class="text-sm text-muted" style="margin-top:4px;">Database: ~/spendwise.db (SQLite) &nbsp;|&nbsp; Currency
+            API: Frankfurter.app</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ Mobile bottom navigation ═══════════════════════════════════════ -->
+  <nav class="mobile-bottom-nav">
+    <button class="mob-nav-btn active" id="mob-dashboard" onclick="navigate('dashboard')">
+      <span class="mob-icon">🏠</span> Home
     </button>
-    <button class="nav-btn" id="nav-subscriptions" onclick="navigate('subscriptions')">
-      <span class="nav-icon">📋</span> Subscriptions
+    <button class="mob-nav-btn" id="mob-subscriptions" onclick="navigate('subscriptions')">
+      <span class="mob-icon">📋</span> Subs
     </button>
-    <button class="nav-btn" id="nav-converter" onclick="navigate('converter')">
-      <span class="nav-icon">💱</span> Converter
+    <button class="mob-nav-btn" id="mob-converter" onclick="navigate('converter')">
+      <span class="mob-icon">💱</span> Convert
     </button>
-    <button class="nav-btn" id="nav-settings" onclick="navigate('settings')">
-      <span class="nav-icon">⚙️</span> Settings
+    <button class="mob-nav-btn" id="mob-settings" onclick="navigate('settings')">
+      <span class="mob-icon">⚙️</span> Settings
     </button>
   </nav>
 
-  <div class="sidebar-footer">
-    <div class="user-info" id="sidebar-user">
-      <div class="user-avatar" id="user-avatar">?</div>
-      <div class="user-details">
-        <div class="user-name" id="user-name">Loading...</div>
-        <div class="user-email" id="user-email"></div>
-      </div>
-    </div>
-    <a href="/logout" class="logout-btn" title="Sign out">⏻ Logout</a>
-  </div>
-</aside>
+  <!-- ══ Toast notification ═════════════════════════════════════════════ -->
+  <div id="toast"></div>
 
-<!-- ══ Mobile top header ═════════════════════════════════════════════ -->
-<header class="mobile-header">
-  <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
-  <span class="mobile-title">💰 SpendWise</span>
-</header>
-
-<!-- ══ Main content ══════════════════════════════════════════════════ -->
-<main class="main">
-
-  <!-- ─── DASHBOARD ─────────────────────────────────────────────────── -->
-  <section class="section active" id="section-dashboard">
-    <h1 class="page-title">Dashboard</h1>
-    <p class="page-subtitle" id="dash-date">Loading...</p>
-
-    <!-- Stats cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Monthly Total</div>
-        <div class="stat-value" id="stat-total">—</div>
-        <div class="stat-hint" id="stat-currency-hint">in home currency</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Budget Limit</div>
-        <div class="stat-value" id="stat-budget">—</div>
-        <div class="stat-hint" id="stat-budget-status">Loading...</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Active Subscriptions</div>
-        <div class="stat-value" id="stat-count">—</div>
-        <div class="stat-hint">tracked services</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Upcoming Renewals</div>
-        <div class="stat-value warning" id="stat-upcoming">—</div>
-        <div class="stat-hint">within 7 days</div>
-      </div>
-    </div>
-
-    <!-- Dashboard grid: chart + upcoming -->
-    <div class="dashboard-grid">
-      <div class="card">
-        <div class="card-title">📊 Spending by Category</div>
-        <div class="chart-wrap">
-          <canvas id="spendingChart"></canvas>
-        </div>
-        <div id="chart-empty" class="empty-state" style="display:none;">
-          <div class="empty-icon">📊</div>
-          <p>Add subscriptions to see your spending chart</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🔔 Upcoming Renewals</div>
-        <div id="upcoming-list">
-          <div class="spinner"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── SUBSCRIPTIONS ─────────────────────────────────────────────── -->
-  <section class="section" id="section-subscriptions">
-    <div class="flex-between" style="margin-bottom:8px;">
-      <div>
-        <h1 class="page-title">Subscriptions</h1>
-        <p class="page-subtitle">Manage all your recurring expenses</p>
-      </div>
-      <button class="btn btn-primary" onclick="toggleAddForm()">
-        ＋ Add New
-      </button>
-    </div>
-
-    <!-- Add form (hidden by default) -->
-    <div class="card mt-16" id="add-form-card" style="display:none; margin-bottom:20px;">
-      <div class="card-title">➕ Add Subscription</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="f-name">Service Name *</label>
-          <input class="form-control" id="f-name" type="text" placeholder="e.g. Netflix" />
-        </div>
-        <div class="form-group">
-          <label for="f-amount">Amount *</label>
-          <input class="form-control" id="f-amount" type="number" step="0.01" min="0" placeholder="9.99" />
-        </div>
-        <div class="form-group">
-          <label for="f-currency">Currency *</label>
-          <select class="form-control" id="f-currency">
-            <option value="INR">INR – Indian Rupee</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-category">Category</label>
-          <select class="form-control" id="f-category">
-            <option value="Entertainment">Entertainment</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Health">Health</option>
-            <option value="Work">Work</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-cycle">Billing Cycle</label>
-          <select class="form-control" id="f-cycle">
-            <option value="Monthly">Monthly</option>
-            <option value="Yearly">Yearly</option>
-            <option value="Weekly">Weekly</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-date">Next Renewal Date</label>
-          <input class="form-control" id="f-date" type="date" />
-        </div>
-      </div>
-      <div class="flex gap-8">
-        <button class="btn btn-primary" onclick="addSubscription()">Save Subscription</button>
-        <button class="btn btn-outline" onclick="toggleAddForm()">Cancel</button>
-      </div>
-      <div id="form-error" class="danger text-sm mt-16" style="display:none;"></div>
-    </div>
-
-    <!-- Subscriptions table -->
-    <div class="card">
-      <div class="table-wrap">
-        <table id="subs-table">
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th>Amount</th>
-              <th>Monthly (Home)</th>
-              <th>Category</th>
-              <th>Renewal Date</th>
-              <th>Days Left</th>
-              <th>Cycle</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="subs-tbody">
-            <tr><td colspan="8" style="text-align:center;padding:32px;"><div class="spinner"></div></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="subs-empty" class="empty-state" style="display:none;">
-        <div class="empty-icon">📭</div>
-        <p>No subscriptions yet. Click <strong>Add New</strong> to get started.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── CURRENCY CONVERTER ────────────────────────────────────────── -->
-  <section class="section" id="section-converter">
-    <h1 class="page-title">Currency Converter</h1>
-    <p class="page-subtitle">Live exchange rates powered by Frankfurter.app</p>
-
-    <div class="card converter-wrap">
-      <div class="card-title">💱 Convert Currency</div>
-
-      <div class="converter-row">
-        <div class="form-group">
-          <label for="conv-from">From</label>
-          <select class="form-control" id="conv-from"></select>
-        </div>
-        <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
-        <div class="form-group">
-          <label for="conv-to">To</label>
-          <select class="form-control" id="conv-to"></select>
-        </div>
-      </div>
-
-      <div class="form-group" style="margin-bottom:16px;">
-        <label for="conv-amount">Amount</label>
-        <input class="form-control" id="conv-amount" type="number" value="1" step="0.01" min="0" />
-      </div>
-
-      <button class="btn btn-primary" onclick="convertCurrency()" style="width:100%;">
-        Convert
-      </button>
-
-      <div class="converter-result" id="conv-result" style="display:none; margin-top:16px;">
-        <div class="result-amount" id="conv-result-amount">—</div>
-        <div class="result-rate" id="conv-result-rate">—</div>
-      </div>
-    </div>
-
-    <!-- Live rates panel -->
-    <div class="card mt-16">
-      <div class="flex-between">
-        <div class="card-title" style="margin-bottom:0;">📈 Live Rates</div>
-        <select class="form-control" id="rates-base" style="width:auto;" onchange="loadRates()"></select>
-      </div>
-      <div id="rates-grid" class="rates-grid">
-        <div class="spinner"></div>
-      </div>
-      <p class="text-sm text-muted mt-16" id="rates-timestamp"></p>
-    </div>
-  </section>
-
-  <!-- ─── SETTINGS ──────────────────────────────────────────────────── -->
-  <section class="section" id="section-settings">
-    <h1 class="page-title">Settings</h1>
-    <p class="page-subtitle">Preferences are saved automatically and persist across restarts</p>
-
-    <div class="settings-group">
-      <!-- Home currency -->
-      <div class="settings-row">
-        <label>🏠 Home Currency</label>
-        <p class="text-sm text-muted" style="margin-bottom:10px;">
-          All totals and charts are shown in this currency
-        </p>
-        <div class="flex gap-8">
-          <select class="form-control" id="s-home-currency" style="flex:1;"></select>
-          <button class="btn btn-primary" onclick="saveHomeCurrency()">Save</button>
-        </div>
-      </div>
-
-      <!-- Budget limit -->
-      <div class="settings-row">
-        <label>💰 Monthly Budget Limit</label>
-        <p class="text-sm text-muted" style="margin-bottom:10px;">
-          You'll see a warning when total spending exceeds this amount
-        </p>
-        <div class="flex gap-8">
-          <input class="form-control" id="s-budget" type="number" placeholder="e.g. 5000" style="flex:1;" />
-          <button class="btn btn-primary" onclick="saveBudget()">Save</button>
-        </div>
-      </div>
-
-      <!-- Info -->
-      <div class="settings-row">
-        <label>ℹ️ About SpendWise</label>
-        <p class="text-sm text-muted">Version 2.0 &nbsp;|&nbsp; Java 26 + Spring Boot 3.4</p>
-        <p class="text-sm text-muted" style="margin-top:4px;">Database: ~/spendwise.db (SQLite) &nbsp;|&nbsp; Currency API: Frankfurter.app</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- ══ Mobile bottom navigation ═══════════════════════════════════════ -->
-<nav class="mobile-bottom-nav">
-  <button class="mob-nav-btn active" id="mob-dashboard" onclick="navigate('dashboard')">
-    <span class="mob-icon">🏠</span> Home
-  </button>
-  <button class="mob-nav-btn" id="mob-subscriptions" onclick="navigate('subscriptions')">
-    <span class="mob-icon">📋</span> Subs
-  </button>
-  <button class="mob-nav-btn" id="mob-converter" onclick="navigate('converter')">
-    <span class="mob-icon">💱</span> Convert
-  </button>
-  <button class="mob-nav-btn" id="mob-settings" onclick="navigate('settings')">
-    <span class="mob-icon">⚙️</span> Settings
-  </button>
-</nav>
-
-<!-- ══ Toast notification ═════════════════════════════════════════════ -->
-<div id="toast"></div>
-
-<script src="/js/app.js"></script>
+  <script src="/js/app.js"></script>
 </body>
+
 </html>
