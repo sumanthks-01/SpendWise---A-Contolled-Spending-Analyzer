@@ -277,7 +277,34 @@ function renderUpcoming(upcoming, home) {
     return;
   }
 
-  el.innerHTML = upcoming.map(s => `
+  // Check for urgent renewals (today or tomorrow)
+  const urgentRenewals = upcoming.filter(s => s.daysUntilRenewal <= 1);
+  
+  let html = '';
+  
+  // Add alert for urgent renewals
+  if (urgentRenewals.length > 0) {
+    const alertVariant = urgentRenewals.some(s => s.daysUntilRenewal === 0) ? 'error' : 'warning';
+    const alertIcon = urgentRenewals.some(s => s.daysUntilRenewal === 0) ? '⚠️' : '🔔';
+    const alertTitle = urgentRenewals.some(s => s.daysUntilRenewal === 0) 
+      ? 'Renewals Due Today!' 
+      : 'Renewals Due Tomorrow';
+    const alertDesc = `${urgentRenewals.length} subscription${urgentRenewals.length > 1 ? 's' : ''} need${urgentRenewals.length === 1 ? 's' : ''} your attention`;
+    
+    html += `
+      <div class="alert alert-${alertVariant}" style="margin-bottom: 12px;">
+        <div class="alert-content">
+          <div class="alert-icon">${alertIcon}</div>
+          <div class="alert-body">
+            <div class="alert-title">${alertTitle}</div>
+            <div class="alert-description">${alertDesc}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  html += upcoming.map(s => `
     <div class="renewal-item">
       <div>
         <div class="renewal-name">${esc(s.name)}</div>
@@ -288,6 +315,8 @@ function renderUpcoming(upcoming, home) {
       </div>
     </div>
   `).join('');
+  
+  el.innerHTML = html;
 }
 
 function renderChart(data, home) {
@@ -563,4 +592,72 @@ function esc(str) {
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;');
+}
+
+// ── Logout ────────────────────────────────────────────────────────────
+function logout() {
+  if (!confirm('Are you sure you want to logout?')) return;
+  window.location.href = '/logout';
+}
+
+// ── Alert Component ────────────────────────────────────────────────────
+function createAlert(options) {
+  const {
+    variant = 'neutral',
+    icon = 'ℹ️',
+    title = '',
+    description = '',
+    actions = [],
+    container = null
+  } = options;
+
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${variant}`;
+
+  const content = document.createElement('div');
+  content.className = 'alert-content';
+
+  // Icon
+  if (icon) {
+    const iconEl = document.createElement('div');
+    iconEl.className = 'alert-icon';
+    iconEl.textContent = icon;
+    content.appendChild(iconEl);
+  }
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'alert-body';
+
+  if (title) {
+    const titleEl = document.createElement('div');
+    titleEl.className = 'alert-title';
+    titleEl.textContent = title;
+    body.appendChild(titleEl);
+  }
+
+  if (description) {
+    const descEl = document.createElement('div');
+    descEl.className = 'alert-description';
+    descEl.textContent = description;
+    body.appendChild(descEl);
+  }
+
+  content.appendChild(body);
+
+  // Actions
+  if (actions.length > 0) {
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'alert-actions';
+    actions.forEach(action => actionsEl.appendChild(action));
+    content.appendChild(actionsEl);
+  }
+
+  alert.appendChild(content);
+
+  if (container) {
+    container.insertBefore(alert, container.firstChild);
+  }
+
+  return alert;
 }

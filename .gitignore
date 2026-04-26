@@ -6,11 +6,16 @@ target/
 *.db
 *.db-shm
 *.db-wal
+*.mv.db
+spendwise-local*
 
 # ── IDE files ──────────────────────────────────────────────────
 .idea/
 *.iml
 .settings/
+.classpath
+.project
+.vscode/
 
 # ── OS files ───────────────────────────────────────────────────
 .DS_Store
@@ -18,3 +23,12 @@ Thumbs.db
 
 # ── Logs ───────────────────────────────────────────────────────
 *.log
+
+# ── Maven ──────────────────────────────────────────────────────
+.mvn/
+mvnw
+mvnw.cmd
+
+# ── Environment ────────────────────────────────────────────────
+.env
+.env.local

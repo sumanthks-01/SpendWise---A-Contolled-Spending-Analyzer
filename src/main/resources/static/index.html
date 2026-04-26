@@ -7,6 +7,7 @@
   <meta name="description"
     content="SpendWise – Track subscriptions and expenses across multiple currencies. Know exactly where your money goes." />
   <title>SpendWise – Smart Expense Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <!-- Chart.js for pie/doughnut chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
@@ -20,22 +21,21 @@
   <!-- ══ Sidebar ═══════════════════════════════════════════════════════ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-text">💰 SpendWise</div>
-      <div class="logo-sub">Smart Expense Tracker v2.0</div>
+      <img src="/images/logo.svg" alt="SpendWise Logo" class="logo-image" />
     </div>
 
     <nav class="sidebar-nav">
       <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
-        <span class="nav-icon">🏠</span> Dashboard
+        Dashboard
       </button>
       <button class="nav-btn" id="nav-subscriptions" onclick="navigate('subscriptions')">
-        <span class="nav-icon">📋</span> Subscriptions
+        Subscriptions
       </button>
       <button class="nav-btn" id="nav-converter" onclick="navigate('converter')">
-        <span class="nav-icon">💱</span> Converter
+        Converter
       </button>
       <button class="nav-btn" id="nav-settings" onclick="navigate('settings')">
-        <span class="nav-icon">⚙️</span> Settings
+        Settings
       </button>
     </nav>
 
@@ -47,7 +47,8 @@
   <!-- ══ Mobile top header ═════════════════════════════════════════════ -->
   <header class="mobile-header">
     <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
-    <span class="mobile-title">💰 SpendWise</span>
+    <img src="/images/favicon.svg" alt="SpendWise" class="mobile-logo" />
+    <span class="mobile-title">SpendWise</span>
   </header>
 
   <!-- ══ Main content ══════════════════════════════════════════════════ -->
@@ -280,6 +281,11 @@
           <p class="text-sm text-muted">Version 2.0 &nbsp;|&nbsp; Java 26 + Spring Boot 3.4</p>
           <p class="text-sm text-muted" style="margin-top:4px;">Database: ~/spendwise.db (SQLite) &nbsp;|&nbsp; Currency
             API: Frankfurter.app</p>
+        </div>
+
+        <!-- Logout -->
+        <div class="settings-row">
+          <button class="btn btn-danger" onclick="logout()" style="width:100%;">🚪 Logout</button>
         </div>
       </div>
     </section>
