@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: spendwise
+    runtime: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/SpendWise.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8080
+    autoDeploy: true
+
+databases:
+  - name: spendwise-db
+    databaseName: spendwise
+    user: spendwise
+    plan: free

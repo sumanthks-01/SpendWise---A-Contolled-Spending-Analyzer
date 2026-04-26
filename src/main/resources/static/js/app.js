@@ -29,12 +29,28 @@ function sym(c) { return CURRENCY_SYMBOLS[c] || c + ' '; }
 // ── Bootstrap ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   updateDateLabel();
+  await loadCurrentUser();
   await loadSettings();
   await loadCurrencies();
   await refreshDashboard();
   await loadSubscriptions();
   closeSidebar();
 });
+
+// ── Current user (sidebar) ─────────────────────────────────────────────────
+async function loadCurrentUser() {
+  try {
+    const me = await api('GET', '/api/user/me');
+    const avatarEl = document.getElementById('user-avatar');
+    const nameEl   = document.getElementById('user-name');
+    const emailEl  = document.getElementById('user-email');
+    if (avatarEl) avatarEl.textContent = me.initials || '?';
+    if (nameEl)   nameEl.textContent   = me.name  || '';
+    if (emailEl)  emailEl.textContent  = me.email || '';
+  } catch (e) {
+    console.warn('Could not load user info:', e);
+  }
+}
 
 // ── Navigation ────────────────────────────────────────────────────────
 function navigate(section) {

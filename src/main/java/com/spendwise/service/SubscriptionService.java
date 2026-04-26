@@ -1,8 +1,12 @@
 package com.spendwise.service;
 
 import com.spendwise.model.Subscription;
-import com.spendwise.repository.DatabaseHandler;
+import com.spendwise.model.User;
+import com.spendwise.repository.SubscriptionRepository;
+import com.spendwise.service.CurrencyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,86 +14,75 @@ import java.util.stream.Collectors;
 @Service
 public class SubscriptionService {
 
-    private final DatabaseHandler db;
-    private final CurrencyService currencyService;
-
-    public SubscriptionService(DatabaseHandler db, CurrencyService currencyService) {
-        this.db = db;
-        this.currencyService = currencyService;
-        this.db.initializeDatabase();
-    }
+    @Autowired private SubscriptionRepository subscriptionRepo;
+    @Autowired private CurrencyService currencyService;
 
     // ── CRUD ──────────────────────────────────────────────────────────────────
 
-    public void addSubscription(Subscription sub)  { db.addSubscription(sub); }
-    public void removeSubscription(int id)          { db.deleteSubscription(id); }
-    public List<Subscription> getAllSubscriptions() { return db.getAllSubscriptions(); }
-
-    // ── Settings ──────────────────────────────────────────────────────────────
-
-    public double getBudgetLimit() {
-        String v = db.getSetting("budget_limit");
-        try { return v != null ? Double.parseDouble(v) : 5000.0; }
-        catch (NumberFormatException e) { return 5000.0; }
+    public List<Subscription> getAllSubscriptions(User user) {
+        return subscriptionRepo.findByUser(user);
     }
 
-    public void setBudgetLimit(double limit) {
-        db.saveSetting("budget_limit", String.valueOf(limit));
+    public Subscription addSubscription(User user, Subscription sub) {
+        sub.setUser(user);
+        return subscriptionRepo.save(sub);
     }
 
-    public String getHomeCurrency() {
-        String v = db.getSetting("home_currency");
-        return v != null ? v : "INR";
+    @Transactional
+    public void deleteSubscription(Long id, User user) {
+        subscriptionRepo.deleteByIdAndUser(id, user);
     }
 
-    public void setHomeCurrency(String currency) {
-        db.saveSetting("home_currency", currency.toUpperCase());
-    }
+    // ── Dashboard data ────────────────────────────────────────────────────────
 
-    public Map<String, String> getAllSettings() {
-        return db.getAllSettings();
-    }
-
-    // ── Calculations ──────────────────────────────────────────────────────────
-
-    /**
-     * Total monthly spend in home currency.
-     * Each subscription's monthly equivalent is converted from its own currency.
-     */
-    public double calculateTotal(String homeCurrency) {
-        String home = homeCurrency != null ? homeCurrency.toUpperCase() : getHomeCurrency();
-        return getAllSubscriptions().stream()
-                .mapToDouble(sub -> {
-                    double monthly = sub.getMonthlyEquivalent();
-                    return currencyService.convert(monthly, sub.getCurrency(), home);
-                })
-                .sum();
-    }
-
-    public boolean isOverBudget(String homeCurrency) {
-        return calculateTotal(homeCurrency) > getBudgetLimit();
-    }
-
-    /**
-     * Spending by category in home currency (for pie chart).
-     */
-    public Map<String, Double> getChartData(String homeCurrency) {
-        String home = homeCurrency != null ? homeCurrency.toUpperCase() : getHomeCurrency();
-        Map<String, Double> data = new LinkedHashMap<>();
-        for (Subscription sub : getAllSubscriptions()) {
-            double monthly = sub.getMonthlyEquivalent();
-            double converted = currencyService.convert(monthly, sub.getCurrency(), home);
-            data.merge(sub.getCategory() != null ? sub.getCategory() : "Others", converted, Double::sum);
-        }
-        return data;
-    }
-
-    /**
-     * Subscriptions renewing within the next 7 days.
-     */
-    public List<Subscription> getUpcomingRenewals() {
-        return getAllSubscriptions().stream()
+    /** Returns upcoming renewals (0–7 days) for this user. */
+    public List<Subscription> getUpcomingRenewals(User user) {
+        return getAllSubscriptions(user).stream()
                 .filter(s -> s.getDaysUntilRenewal() >= 0 && s.getDaysUntilRenewal() <= 7)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns total monthly spend converted to homeCurrency,
+     * along with overBudget flag and the budget limit.
+     */
+    public Map<String, Object> getMonthlyTotal(User user) {
+        String home = user.getHomeCurrency();
+        double budget = user.getBudgetLimit();
+
+        double total = getAllSubscriptions(user).stream()
+                .mapToDouble(s -> {
+                    double monthly = s.getMonthlyEquivalent();
+                    if (!s.getCurrency().equalsIgnoreCase(home)) {
+                        monthly = currencyService.convert(monthly, s.getCurrency(), home);
+                    }
+                    return monthly;
+                })
+                .sum();
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("total", Math.round(total * 100.0) / 100.0);
+        result.put("budgetLimit", budget);
+        result.put("overBudget", total > budget);
+        return result;
+    }
+
+    /**
+     * Returns per-category spending totals (converted to homeCurrency) for the chart.
+     */
+    public Map<String, Double> getChartData(User user) {
+        String home = user.getHomeCurrency();
+        Map<String, Double> chart = new LinkedHashMap<>();
+
+        getAllSubscriptions(user).forEach(s -> {
+            double monthly = s.getMonthlyEquivalent();
+            if (!s.getCurrency().equalsIgnoreCase(home)) {
+                monthly = currencyService.convert(monthly, s.getCurrency(), home);
+            }
+            String cat = s.getCategory() != null ? s.getCategory() : "Others";
+            chart.merge(cat, Math.round(monthly * 100.0) / 100.0, Double::sum);
+        });
+
+        return chart;
     }
 }

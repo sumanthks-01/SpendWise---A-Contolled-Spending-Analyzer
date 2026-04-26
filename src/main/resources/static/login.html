@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpendWise – Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --purple:   #7c3aed;
+      --purple2:  #6d28d9;
+      --cyan:     #06b6d4;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --danger:   #ef4444;
+      --success:  #10b981;
+      --input-bg: #0d1117;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 80%, rgba(6,182,212,.08) 0%, transparent 50%);
+    }
+
+    .auth-wrap {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeUp .45s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Logo ── */
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .logo-icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
+    .logo-name {
+      font-size: 1.7rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .logo-sub { color: var(--muted); font-size: .82rem; margin-top: 4px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+
+    /* ── Tab toggle ── */
+    .tabs {
+      display: flex;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1; padding: 9px;
+      border: none; border-radius: 7px;
+      background: transparent; color: var(--muted);
+      font-family: inherit; font-size: .9rem; font-weight: 500;
+      cursor: pointer; transition: all .2s;
+    }
+    .tab-btn.active {
+      background: var(--purple);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(124,58,237,.4);
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: .82rem; font-weight: 500; color: var(--muted); margin-bottom: 7px; letter-spacing: .02em; }
+
+    .input-wrap { position: relative; }
+    .form-control {
+      width: 100%; padding: 11px 14px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text);
+      font-family: inherit; font-size: .95rem;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.18);
+    }
+
+    /* password toggle */
+    .pwd-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      font-size: 1rem; padding: 2px;
+      transition: color .2s;
+    }
+    .pwd-toggle:hover { color: var(--text); }
+
+    /* strength bar */
+    .strength-bar {
+      height: 3px; border-radius: 3px; margin-top: 7px;
+      background: var(--border); overflow: hidden; display: none;
+    }
+    .strength-fill {
+      height: 100%; border-radius: 3px;
+      transition: width .3s, background .3s;
+    }
+    .strength-label { font-size: .72rem; margin-top: 4px; }
+
+    /* ── Submit button ── */
+    .btn-primary {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--purple), var(--purple2));
+      border: none; border-radius: 9px;
+      color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600;
+      cursor: pointer; letter-spacing: .02em;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      box-shadow: 0 4px 16px rgba(124,58,237,.35);
+      margin-top: 4px;
+    }
+    .btn-primary:hover  { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(124,58,237,.45); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── Alert messages ── */
+    .alert {
+      padding: 11px 14px; border-radius: 9px;
+      font-size: .88rem; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .alert-error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.3);  color: #fca5a5; }
+    .alert-success { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); color: #6ee7b7; }
+    .alert-logout  { background: rgba(6,182,212,.1);   border: 1px solid rgba(6,182,212,.25); color: #67e8f9; }
+
+    /* ── Footer link ── */
+    .footer-text {
+      text-align: center; margin-top: 24px;
+      color: var(--muted); font-size: .85rem;
+    }
+    .footer-text a { color: var(--purple); text-decoration: none; font-weight: 500; }
+    .footer-text a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 460px) {
+      .card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <!-- Logo -->
+  <div class="logo">
+    <span class="logo-icon">💰</span>
+    <div class="logo-name">SpendWise</div>
+    <div class="logo-sub">Smart Expense Tracker</div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- Tab switcher -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login"  onclick="showTab('login')">Sign In</button>
+      <button class="tab-btn"        id="tab-signup" onclick="showTab('signup')">Create Account</button>
+    </div>
+
+    <!-- ── Flash messages ── -->
+    <div id="msg-area"></div>
+
+    <!-- ══ LOGIN FORM ══ -->
+    <form id="form-login" action="/auth/login" method="POST">
+      <div class="form-group">
+        <label for="l-email">Email Address</label>
+        <input class="form-control" id="l-email" name="email" type="email"
+               placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="l-password">Password</label>
+        <div class="input-wrap">
+          <input class="form-control" id="l-password" name="password" type="password"
+                 placeholder="••••••••" required autocomplete="current-password" style="padding-right:40px;" />
+          <button type="button" class="pwd-toggle" onclick="togglePwd('l-password', this)">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary">Sign In →</button>
+    </form>
+
+    <!-- ══ SIGNUP FORM ══ -->
+    <form id="form-signup" action="/auth/signup" method="POST" style="display:none;" onsubmit="return validateSignup()">
+      <div class="form-group">
+        <label for="s-name">Full Name</label>
+        <input class="form-control" id="s-name" name="name" type="text"
+               placeholder="Your Name" required autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label for="s-email">Email Address</label>
+        <input class="form-control" id="s-email" name="email" type="email"
+               placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="s-password">Password</label>
+        <div class="input-wrap">
+          <input class="form-control" id="s-password" name="password" type="password"
+                 placeholder="Min. 6 characters" required autocomplete="new-password"
+                 oninput="updateStrength(this.value)" style="padding-right:40px;" />
+          <button type="button" class="pwd-toggle" onclick="togglePwd('s-password', this)">👁</button>
+        </div>
+        <div class="strength-bar" id="strength-bar">
+          <div class="strength-fill" id="strength-fill"></div>
+        </div>
+        <div class="strength-label" id="strength-label" style="color:var(--muted);"></div>
+      </div>
+      <div class="form-group">
+        <label for="s-confirm">Confirm Password</label>
+        <div class="input-wrap">
+          <input class="form-control" id="s-confirm" name="confirm_password" type="password"
+                 placeholder="Repeat password" required autocomplete="new-password" style="padding-right:40px;" />
+          <button type="button" class="pwd-toggle" onclick="togglePwd('s-confirm', this)">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary">Create Account →</button>
+    </form>
+
+  </div><!-- /card -->
+
+  <div class="footer-text" id="footer-link">
+    Don't have an account? <a href="#" onclick="showTab('signup'); return false;">Sign up free</a>
+  </div>
+
+</div><!-- /auth-wrap -->
+
+<script>
+  // ── Read URL params ───────────────────────────────────────────────────────
+  const params = new URLSearchParams(location.search);
+
+  // Show correct tab
+  if (params.get('mode') === 'signup') showTab('signup');
+
+  // Flash messages
+  const msgArea = document.getElementById('msg-area');
+
+  if (params.get('error') === 'true') {
+    showMsg('error', '⚠️ Incorrect email or password. Please try again.');
+  }
+  if (params.get('logout') === 'true') {
+    showMsg('logout', '👋 You have been signed out successfully.');
+  }
+
+  // Flash from server redirect (signup errors come via URL fragment hack)
+  // The server uses RedirectAttributes → check sessionStorage
+  const flashErr = sessionStorage.getItem('signupError');
+  if (flashErr) {
+    showMsg('error', '⚠️ ' + flashErr);
+    sessionStorage.removeItem('signupError');
+    showTab('signup');
+  }
+
+  function showMsg(type, text) {
+    const cls = type === 'logout' ? 'alert-logout' : type === 'error' ? 'alert-error' : 'alert-success';
+    msgArea.innerHTML = `<div class="alert ${cls}">${text}</div>`;
+  }
+
+  // ── Tab switch ────────────────────────────────────────────────────────────
+  function showTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('form-login').style.display  = isLogin ? '' : 'none';
+    document.getElementById('form-signup').style.display = isLogin ? 'none' : '';
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-signup').classList.toggle('active', !isLogin);
+    document.getElementById('footer-link').innerHTML = isLogin
+      ? `Don't have an account? <a href="#" onclick="showTab('signup');return false;">Sign up free</a>`
+      : `Already have an account? <a href="#" onclick="showTab('login');return false;">Sign in</a>`;
+    msgArea.innerHTML = '';
+  }
+
+  // ── Password show/hide ────────────────────────────────────────────────────
+  function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁';
+  }
+
+  // ── Password strength ─────────────────────────────────────────────────────
+  function updateStrength(val) {
+    const bar   = document.getElementById('strength-bar');
+    const fill  = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+    bar.style.display = val.length ? 'block' : 'none';
+
+    let score = 0;
+    if (val.length >= 6)  score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { pct:'20%', color:'#ef4444', text:'Weak' },
+      { pct:'40%', color:'#f97316', text:'Fair' },
+      { pct:'60%', color:'#f59e0b', text:'Good' },
+      { pct:'80%', color:'#10b981', text:'Strong' },
+      { pct:'100%',color:'#06b6d4', text:'Very Strong' },
+    ];
+    const lv = levels[Math.max(0, score - 1)];
+    fill.style.width      = lv.pct;
+    fill.style.background = lv.color;
+    label.textContent     = lv.text;
+    label.style.color     = lv.color;
+  }
+
+  // ── Signup client-side validation ─────────────────────────────────────────
+  function validateSignup() {
+    const pwd  = document.getElementById('s-password').value;
+    const conf = document.getElementById('s-confirm').value;
+    if (pwd.length < 6) {
+      showMsg('error', '⚠️ Password must be at least 6 characters.'); return false;
+    }
+    if (pwd !== conf) {
+      showMsg('error', '⚠️ Passwords do not match.'); return false;
+    }
+    return true;
+  }
+</script>
+</body>
+</html>

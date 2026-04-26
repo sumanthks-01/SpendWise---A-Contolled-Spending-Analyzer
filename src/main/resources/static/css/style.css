@@ -117,11 +117,39 @@ body {
 .nav-btn .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
 
 .sidebar-footer {
-  padding: 16px 24px;
+  padding: 16px;
   border-top: 1px solid var(--border);
-  font-size: .75rem;
-  color: var(--text3);
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--gradient);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+
+.user-details { overflow: hidden; }
+.user-name  { font-size: .85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-email { font-size: .72rem; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.logout-btn {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text2); text-decoration: none;
+  font-size: .82rem; font-weight: 500;
+  transition: all var(--transition);
+}
+.logout-btn:hover { background: rgba(239,68,68,.1); color: var(--danger); }
 
 /* ── Mobile header ──────────────────────────────────────────────────── */
 .mobile-header {
