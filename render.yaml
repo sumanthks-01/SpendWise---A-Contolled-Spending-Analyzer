@@ -1,7 +1,7 @@
 services:
   - type: web
     name: spendwise
-    runtime: docker
+    env: docker
     plan: free
     dockerfilePath: ./Dockerfile
     envVars:
