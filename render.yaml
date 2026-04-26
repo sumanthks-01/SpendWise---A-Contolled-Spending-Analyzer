@@ -9,6 +9,10 @@ services:
         value: prod
       - key: JAVA_TOOL_OPTIONS
         value: -Xmx512m -Xms256m
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spendwise-db
+          property: connectionString
     healthCheckPath: /
     autoDeploy: true
 
