@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/login", "/login.html",
                     "/auth/signup", "/auth/login",
-                    "/css/**", "/js/**", "/favicon.ico",
+                    "/css/**", "/js/**", "/images/**", "/favicon.ico",
                     "/h2-console/**"
                 ).permitAll()
                 // Everything else: must be logged in
