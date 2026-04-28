@@ -70,27 +70,7 @@
       box-shadow: 0 24px 64px rgba(0,0,0,.5);
     }
 
-    /* ── Tab toggle ── */
-    .tabs {
-      display: flex;
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 28px;
-      gap: 4px;
-    }
-    .tab-btn {
-      flex: 1; padding: 9px;
-      border: none; border-radius: 7px;
-      background: transparent; color: var(--muted);
-      font-family: inherit; font-size: .9rem; font-weight: 500;
-      cursor: pointer; transition: all .2s;
-    }
-    .tab-btn.active {
-      background: var(--purple);
-      color: #fff;
-      box-shadow: 0 2px 12px rgba(124,58,237,.4);
-    }
+
 
     /* ── Form ── */
     .form-group { margin-bottom: 18px; }
@@ -175,19 +155,15 @@
 
   <!-- Logo -->
   <div class="logo">
-    <span class="logo-icon">💰</span>
-    <div class="logo-name">SpendWise</div>
+    <img src="/images/Logo.png" alt="SpendWise Logo" style="height: 80px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 8px;" />
+    <div class="logo-name" style="font-size: 1.4rem;">SpendWise</div>
     <div class="logo-sub">Smart Expense Tracker</div>
   </div>
 
   <!-- Card -->
   <div class="card">
 
-    <!-- Tab switcher -->
-    <div class="tabs">
-      <button class="tab-btn active" id="tab-login"  onclick="showTab('login')">Sign In</button>
-      <button class="tab-btn"        id="tab-signup" onclick="showTab('signup')">Create Account</button>
-    </div>
+
 
     <!-- ── Flash messages ── -->
     <div id="msg-area"></div>
@@ -290,8 +266,6 @@
     const isLogin = tab === 'login';
     document.getElementById('form-login').style.display  = isLogin ? '' : 'none';
     document.getElementById('form-signup').style.display = isLogin ? 'none' : '';
-    document.getElementById('tab-login').classList.toggle('active', isLogin);
-    document.getElementById('tab-signup').classList.toggle('active', !isLogin);
     document.getElementById('footer-link').innerHTML = isLogin
       ? `Don't have an account? <a href="#" onclick="showTab('signup');return false;">Sign up free</a>`
       : `Already have an account? <a href="#" onclick="showTab('login');return false;">Sign in</a>`;
