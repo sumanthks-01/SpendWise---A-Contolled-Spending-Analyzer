@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,8 +22,15 @@
     }
 
     @keyframes fadeUp {
-      from { opacity:0; transform:translateY(20px); }
-      to   { opacity:1; transform:translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ── Logo ── */
@@ -30,226 +38,288 @@
       text-align: center;
       margin-bottom: 32px;
     }
+
     .logo-name {
-      font-size: 1.7rem; font-weight: 700;
+      font-size: 1.7rem;
+      font-weight: 700;
       background: var(--gradient);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .logo-sub { color: var(--text2); font-size: .82rem; margin-top: 4px; }
+
+    .logo-sub {
+      color: var(--text2);
+      font-size: .82rem;
+      margin-top: 4px;
+    }
 
     /* ── Form ── */
-    .form-group { margin-bottom: 18px; }
-    
-    .input-wrap { position: relative; }
-    
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
     /* password toggle */
     .pwd-toggle {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--text2); cursor: pointer;
-      font-size: 1rem; padding: 2px;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px;
       transition: color .2s;
     }
-    .pwd-toggle:hover { color: var(--text); }
+
+    .pwd-toggle:hover {
+      color: var(--text);
+    }
 
     /* strength bar */
     .strength-bar {
-      height: 3px; border-radius: 3px; margin-top: 7px;
-      background: var(--border); overflow: hidden; display: none;
+      height: 3px;
+      border-radius: 3px;
+      margin-top: 7px;
+      background: var(--border);
+      overflow: hidden;
+      display: none;
     }
+
     .strength-fill {
-      height: 100%; border-radius: 3px;
+      height: 100%;
+      border-radius: 3px;
       transition: width .3s, background .3s;
     }
-    .strength-label { font-size: .72rem; margin-top: 4px; }
+
+    .strength-label {
+      font-size: .72rem;
+      margin-top: 4px;
+    }
 
     /* ── Alert messages ── */
-    .alert-error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.3);  color: var(--danger); }
-    .alert-success { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); color: var(--success); }
-    .alert-logout  { background: rgba(6,182,212,.1);   border: 1px solid rgba(6,182,212,.25); color: var(--accent2); }
+    .alert-error {
+      background: rgba(239, 68, 68, .12);
+      border: 1px solid rgba(239, 68, 68, .3);
+      color: var(--danger);
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, .12);
+      border: 1px solid rgba(16, 185, 129, .3);
+      color: var(--success);
+    }
+
+    .alert-logout {
+      background: rgba(6, 182, 212, .1);
+      border: 1px solid rgba(6, 182, 212, .25);
+      color: var(--accent2);
+    }
 
     /* ── Footer link ── */
     .footer-text {
-      text-align: center; margin-top: 24px;
-      color: var(--text2); font-size: .85rem;
+      text-align: center;
+      margin-top: 24px;
+      color: var(--text2);
+      font-size: .85rem;
     }
-    .footer-text a { color: var(--accent); text-decoration: none; font-weight: 500; }
-    .footer-text a:hover { text-decoration: underline; }
+
+    .footer-text a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
 
     /* ── Responsive ── */
     @media (max-width: 460px) {
-      .card { padding: 28px 20px; }
+      .card {
+        padding: 28px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<div class="auth-wrap">
+  <div class="auth-wrap">
 
-  <!-- Logo -->
-  <div class="logo">
-    <img src="/images/Logo.png" alt="SpendWise Logo" style="height: 80px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 8px;" />
-    <div class="logo-name" style="font-size: 1.4rem;">SpendWise</div>
-    <div class="logo-sub">Smart Expense Tracker</div>
-  </div>
+    <!-- Logo -->
+    <div class="logo">
+      <img src="/images/Logo.png" alt="SpendWise Logo"
+        style="height: 80px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 8px;" />
+      <div class="logo-name" style="font-size: 1.4rem;">SpendWise</div>
+    </div>
 
-  <!-- Card -->
-  <div class="card">
+    <!-- Card -->
+    <div class="card">
 
-    <!-- ── Flash messages ── -->
-    <div id="msg-area"></div>
+      <!-- ── Flash messages ── -->
+      <div id="msg-area"></div>
 
-    <!-- ══ LOGIN FORM ══ -->
-    <form id="form-login" action="/auth/login" method="POST">
-      <div class="form-group">
-        <label for="l-email">Email Address</label>
-        <input class="form-control" id="l-email" name="email" type="email"
-               placeholder="you@example.com" required autocomplete="email" />
-      </div>
-      <div class="form-group">
-        <label for="l-password">Password</label>
-        <div class="input-wrap">
-          <input class="form-control" id="l-password" name="password" type="password"
-                 placeholder="••••••••" required autocomplete="current-password" style="padding-right:40px;" />
-          <button type="button" class="pwd-toggle" onclick="togglePwd('l-password', this)">👁</button>
+      <!-- ══ LOGIN FORM ══ -->
+      <form id="form-login" action="/auth/login" method="POST">
+        <div class="form-group">
+          <label for="l-email">Email Address</label>
+          <input class="form-control" id="l-email" name="email" type="email" placeholder="you@example.com" required
+            autocomplete="email" />
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">Sign In →</button>
-    </form>
-
-    <!-- ══ SIGNUP FORM ══ -->
-    <form id="form-signup" action="/auth/signup" method="POST" style="display:none;" onsubmit="return validateSignup()">
-      <div class="form-group">
-        <label for="s-name">Full Name</label>
-        <input class="form-control" id="s-name" name="name" type="text"
-               placeholder="Your Name" required autocomplete="name" />
-      </div>
-      <div class="form-group">
-        <label for="s-email">Email Address</label>
-        <input class="form-control" id="s-email" name="email" type="email"
-               placeholder="you@example.com" required autocomplete="email" />
-      </div>
-      <div class="form-group">
-        <label for="s-password">Password</label>
-        <div class="input-wrap">
-          <input class="form-control" id="s-password" name="password" type="password"
-                 placeholder="Min. 6 characters" required autocomplete="new-password"
-                 oninput="updateStrength(this.value)" style="padding-right:40px;" />
-          <button type="button" class="pwd-toggle" onclick="togglePwd('s-password', this)">👁</button>
+        <div class="form-group">
+          <label for="l-password">Password</label>
+          <div class="input-wrap">
+            <input class="form-control" id="l-password" name="password" type="password" placeholder="••••••••" required
+              autocomplete="current-password" style="padding-right:40px;" />
+            <button type="button" class="pwd-toggle" onclick="togglePwd('l-password', this)">👁</button>
+          </div>
         </div>
-        <div class="strength-bar" id="strength-bar">
-          <div class="strength-fill" id="strength-fill"></div>
+        <button type="submit" class="btn btn-primary"
+          style="width: 100%; justify-content: center; margin-top: 8px;">Sign In →</button>
+      </form>
+
+      <!-- ══ SIGNUP FORM ══ -->
+      <form id="form-signup" action="/auth/signup" method="POST" style="display:none;"
+        onsubmit="return validateSignup()">
+        <div class="form-group">
+          <label for="s-name">Full Name</label>
+          <input class="form-control" id="s-name" name="name" type="text" placeholder="Your Name" required
+            autocomplete="name" />
         </div>
-        <div class="strength-label" id="strength-label" style="color:var(--text2);"></div>
-      </div>
-      <div class="form-group">
-        <label for="s-confirm">Confirm Password</label>
-        <div class="input-wrap">
-          <input class="form-control" id="s-confirm" name="confirm_password" type="password"
-                 placeholder="Repeat password" required autocomplete="new-password" style="padding-right:40px;" />
-          <button type="button" class="pwd-toggle" onclick="togglePwd('s-confirm', this)">👁</button>
+        <div class="form-group">
+          <label for="s-email">Email Address</label>
+          <input class="form-control" id="s-email" name="email" type="email" placeholder="you@example.com" required
+            autocomplete="email" />
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">Create Account →</button>
-    </form>
+        <div class="form-group">
+          <label for="s-password">Password</label>
+          <div class="input-wrap">
+            <input class="form-control" id="s-password" name="password" type="password" placeholder="Min. 6 characters"
+              required autocomplete="new-password" oninput="updateStrength(this.value)" style="padding-right:40px;" />
+            <button type="button" class="pwd-toggle" onclick="togglePwd('s-password', this)">👁</button>
+          </div>
+          <div class="strength-bar" id="strength-bar">
+            <div class="strength-fill" id="strength-fill"></div>
+          </div>
+          <div class="strength-label" id="strength-label" style="color:var(--text2);"></div>
+        </div>
+        <div class="form-group">
+          <label for="s-confirm">Confirm Password</label>
+          <div class="input-wrap">
+            <input class="form-control" id="s-confirm" name="confirm_password" type="password"
+              placeholder="Repeat password" required autocomplete="new-password" style="padding-right:40px;" />
+            <button type="button" class="pwd-toggle" onclick="togglePwd('s-confirm', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary"
+          style="width: 100%; justify-content: center; margin-top: 8px;">Create Account →</button>
+      </form>
 
-  </div><!-- /card -->
+    </div><!-- /card -->
 
-  <div class="footer-text" id="footer-link">
-    Don't have an account? <a href="#" onclick="showTab('signup'); return false;">Sign up free</a>
-  </div>
+    <div class="footer-text" id="footer-link">
+      Don't have an account? <a href="#" onclick="showTab('signup'); return false;">Sign up free</a>
+    </div>
 
-</div><!-- /auth-wrap -->
+  </div><!-- /auth-wrap -->
 
-<script>
-  // ── Read URL params ───────────────────────────────────────────────────────
-  const params = new URLSearchParams(location.search);
+  <script>
+    // ── Read URL params ───────────────────────────────────────────────────────
+    const params = new URLSearchParams(location.search);
 
-  // Show correct tab
-  if (params.get('mode') === 'signup') showTab('signup');
+    // Show correct tab
+    if (params.get('mode') === 'signup') showTab('signup');
 
-  // Flash messages
-  const msgArea = document.getElementById('msg-area');
+    // Flash messages
+    const msgArea = document.getElementById('msg-area');
 
-  if (params.get('error') === 'true') {
-    showMsg('error', '⚠️ Incorrect email or password. Please try again.');
-  }
-  if (params.get('logout') === 'true') {
-    showMsg('logout', '👋 You have been signed out successfully.');
-  }
-
-  // Flash from server redirect (signup errors come via URL fragment hack)
-  // The server uses RedirectAttributes → check sessionStorage
-  const flashErr = sessionStorage.getItem('signupError');
-  if (flashErr) {
-    showMsg('error', '⚠️ ' + flashErr);
-    sessionStorage.removeItem('signupError');
-    showTab('signup');
-  }
-
-  function showMsg(type, text) {
-    const cls = type === 'logout' ? 'alert-logout' : type === 'error' ? 'alert-error' : 'alert-success';
-    msgArea.innerHTML = `<div class="${cls}" style="padding: 11px 14px; border-radius: 9px; font-size: .88rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">${text}</div>`;
-  }
-
-  // ── Tab switch ────────────────────────────────────────────────────────────
-  function showTab(tab) {
-    const isLogin = tab === 'login';
-    document.getElementById('form-login').style.display  = isLogin ? '' : 'none';
-    document.getElementById('form-signup').style.display = isLogin ? 'none' : '';
-    document.getElementById('footer-link').innerHTML = isLogin
-      ? `Don't have an account? <a href="#" onclick="showTab('signup');return false;">Sign up free</a>`
-      : `Already have an account? <a href="#" onclick="showTab('login');return false;">Sign in</a>`;
-    msgArea.innerHTML = '';
-  }
-
-  // ── Password show/hide ────────────────────────────────────────────────────
-  function togglePwd(id, btn) {
-    const inp = document.getElementById(id);
-    const show = inp.type === 'password';
-    inp.type = show ? 'text' : 'password';
-    btn.textContent = show ? '🙈' : '👁';
-  }
-
-  // ── Password strength ─────────────────────────────────────────────────────
-  function updateStrength(val) {
-    const bar   = document.getElementById('strength-bar');
-    const fill  = document.getElementById('strength-fill');
-    const label = document.getElementById('strength-label');
-    bar.style.display = val.length ? 'block' : 'none';
-
-    let score = 0;
-    if (val.length >= 6)  score++;
-    if (val.length >= 10) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-
-    const levels = [
-      { pct:'20%', color:'var(--danger)', text:'Weak' },
-      { pct:'40%', color:'#f97316', text:'Fair' },
-      { pct:'60%', color:'var(--warning)', text:'Good' },
-      { pct:'80%', color:'var(--success)', text:'Strong' },
-      { pct:'100%',color:'var(--accent2)', text:'Very Strong' },
-    ];
-    const lv = levels[Math.max(0, score - 1)];
-    fill.style.width      = lv.pct;
-    fill.style.background = lv.color;
-    label.textContent     = lv.text;
-    label.style.color     = lv.color;
-  }
-
-  // ── Signup client-side validation ─────────────────────────────────────────
-  function validateSignup() {
-    const pwd  = document.getElementById('s-password').value;
-    const conf = document.getElementById('s-confirm').value;
-    if (pwd.length < 6) {
-      showMsg('error', '⚠️ Password must be at least 6 characters.'); return false;
+    if (params.get('error') === 'true') {
+      showMsg('error', '⚠️ Incorrect email or password. Please try again.');
     }
-    if (pwd !== conf) {
-      showMsg('error', '⚠️ Passwords do not match.'); return false;
+    if (params.get('logout') === 'true') {
+      showMsg('logout', 'You have been signed out successfully.');
     }
-    return true;
-  }
-</script>
+
+    // Flash from server redirect (signup errors come via URL fragment hack)
+    // The server uses RedirectAttributes → check sessionStorage
+    const flashErr = sessionStorage.getItem('signupError');
+    if (flashErr) {
+      showMsg('error', '⚠️ ' + flashErr);
+      sessionStorage.removeItem('signupError');
+      showTab('signup');
+    }
+
+    function showMsg(type, text) {
+      const cls = type === 'logout' ? 'alert-logout' : type === 'error' ? 'alert-error' : 'alert-success';
+      msgArea.innerHTML = `<div class="${cls}" style="padding: 11px 14px; border-radius: 9px; font-size: .88rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">${text}</div>`;
+    }
+
+    // ── Tab switch ────────────────────────────────────────────────────────────
+    function showTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('form-login').style.display = isLogin ? '' : 'none';
+      document.getElementById('form-signup').style.display = isLogin ? 'none' : '';
+      document.getElementById('footer-link').innerHTML = isLogin
+        ? `Don't have an account? <a href="#" onclick="showTab('signup');return false;">Sign up free</a>`
+        : `Already have an account? <a href="#" onclick="showTab('login');return false;">Sign in</a>`;
+      msgArea.innerHTML = '';
+    }
+
+    // ── Password show/hide ────────────────────────────────────────────────────
+    function togglePwd(id, btn) {
+      const inp = document.getElementById(id);
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      btn.textContent = show ? '🙈' : '👁';
+    }
+
+    // ── Password strength ─────────────────────────────────────────────────────
+    function updateStrength(val) {
+      const bar = document.getElementById('strength-bar');
+      const fill = document.getElementById('strength-fill');
+      const label = document.getElementById('strength-label');
+      bar.style.display = val.length ? 'block' : 'none';
+
+      let score = 0;
+      if (val.length >= 6) score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const levels = [
+        { pct: '20%', color: 'var(--danger)', text: 'Weak' },
+        { pct: '40%', color: '#f97316', text: 'Fair' },
+        { pct: '60%', color: 'var(--warning)', text: 'Good' },
+        { pct: '80%', color: 'var(--success)', text: 'Strong' },
+        { pct: '100%', color: 'var(--accent2)', text: 'Very Strong' },
+      ];
+      const lv = levels[Math.max(0, score - 1)];
+      fill.style.width = lv.pct;
+      fill.style.background = lv.color;
+      label.textContent = lv.text;
+      label.style.color = lv.color;
+    }
+
+    // ── Signup client-side validation ─────────────────────────────────────────
+    function validateSignup() {
+      const pwd = document.getElementById('s-password').value;
+      const conf = document.getElementById('s-confirm').value;
+      if (pwd.length < 6) {
+        showMsg('error', '⚠️ Password must be at least 6 characters.'); return false;
+      }
+      if (pwd !== conf) {
+        showMsg('error', '⚠️ Passwords do not match.'); return false;
+      }
+      return true;
+    }
+  </script>
 </body>
+
 </html>
