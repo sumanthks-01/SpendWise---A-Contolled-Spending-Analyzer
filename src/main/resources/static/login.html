@@ -4,43 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SpendWise – Sign In</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+  <link rel="stylesheet" href="/css/style.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0d1117;
-      --surface:  #161b22;
-      --border:   #30363d;
-      --purple:   #7c3aed;
-      --purple2:  #6d28d9;
-      --cyan:     #06b6d4;
-      --text:     #e6edf3;
-      --muted:    #8b949e;
-      --danger:   #ef4444;
-      --success:  #10b981;
-      --input-bg: #0d1117;
-    }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background-image:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 90% 80%, rgba(6,182,212,.08) 0%, transparent 50%);
     }
 
     .auth-wrap {
       width: 100%;
       max-width: 420px;
       animation: fadeUp .45s ease both;
+      z-index: 10;
     }
 
     @keyframes fadeUp {
@@ -53,48 +30,22 @@
       text-align: center;
       margin-bottom: 32px;
     }
-    .logo-icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
     .logo-name {
       font-size: 1.7rem; font-weight: 700;
-      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      background: var(--gradient);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .logo-sub { color: var(--muted); font-size: .82rem; margin-top: 4px; }
-
-    /* ── Card ── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 36px 32px;
-      box-shadow: 0 24px 64px rgba(0,0,0,.5);
-    }
-
-
+    .logo-sub { color: var(--text2); font-size: .82rem; margin-top: 4px; }
 
     /* ── Form ── */
     .form-group { margin-bottom: 18px; }
-    label { display: block; font-size: .82rem; font-weight: 500; color: var(--muted); margin-bottom: 7px; letter-spacing: .02em; }
-
+    
     .input-wrap { position: relative; }
-    .form-control {
-      width: 100%; padding: 11px 14px;
-      background: var(--input-bg);
-      border: 1.5px solid var(--border);
-      border-radius: 9px; color: var(--text);
-      font-family: inherit; font-size: .95rem;
-      transition: border-color .2s, box-shadow .2s;
-      outline: none;
-    }
-    .form-control:focus {
-      border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(124,58,237,.18);
-    }
-
+    
     /* password toggle */
     .pwd-toggle {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--muted); cursor: pointer;
+      background: none; border: none; color: var(--text2); cursor: pointer;
       font-size: 1rem; padding: 2px;
       transition: color .2s;
     }
@@ -111,36 +62,17 @@
     }
     .strength-label { font-size: .72rem; margin-top: 4px; }
 
-    /* ── Submit button ── */
-    .btn-primary {
-      width: 100%; padding: 13px;
-      background: linear-gradient(135deg, var(--purple), var(--purple2));
-      border: none; border-radius: 9px;
-      color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600;
-      cursor: pointer; letter-spacing: .02em;
-      transition: transform .15s, box-shadow .15s, opacity .15s;
-      box-shadow: 0 4px 16px rgba(124,58,237,.35);
-      margin-top: 4px;
-    }
-    .btn-primary:hover  { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(124,58,237,.45); }
-    .btn-primary:active { transform: translateY(0); }
-
     /* ── Alert messages ── */
-    .alert {
-      padding: 11px 14px; border-radius: 9px;
-      font-size: .88rem; margin-bottom: 18px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .alert-error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.3);  color: #fca5a5; }
-    .alert-success { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); color: #6ee7b7; }
-    .alert-logout  { background: rgba(6,182,212,.1);   border: 1px solid rgba(6,182,212,.25); color: #67e8f9; }
+    .alert-error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.3);  color: var(--danger); }
+    .alert-success { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); color: var(--success); }
+    .alert-logout  { background: rgba(6,182,212,.1);   border: 1px solid rgba(6,182,212,.25); color: var(--accent2); }
 
     /* ── Footer link ── */
     .footer-text {
       text-align: center; margin-top: 24px;
-      color: var(--muted); font-size: .85rem;
+      color: var(--text2); font-size: .85rem;
     }
-    .footer-text a { color: var(--purple); text-decoration: none; font-weight: 500; }
+    .footer-text a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .footer-text a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
@@ -163,8 +95,6 @@
   <!-- Card -->
   <div class="card">
 
-
-
     <!-- ── Flash messages ── -->
     <div id="msg-area"></div>
 
@@ -183,7 +113,7 @@
           <button type="button" class="pwd-toggle" onclick="togglePwd('l-password', this)">👁</button>
         </div>
       </div>
-      <button type="submit" class="btn-primary">Sign In →</button>
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">Sign In →</button>
     </form>
 
     <!-- ══ SIGNUP FORM ══ -->
@@ -209,7 +139,7 @@
         <div class="strength-bar" id="strength-bar">
           <div class="strength-fill" id="strength-fill"></div>
         </div>
-        <div class="strength-label" id="strength-label" style="color:var(--muted);"></div>
+        <div class="strength-label" id="strength-label" style="color:var(--text2);"></div>
       </div>
       <div class="form-group">
         <label for="s-confirm">Confirm Password</label>
@@ -219,7 +149,7 @@
           <button type="button" class="pwd-toggle" onclick="togglePwd('s-confirm', this)">👁</button>
         </div>
       </div>
-      <button type="submit" class="btn-primary">Create Account →</button>
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">Create Account →</button>
     </form>
 
   </div><!-- /card -->
@@ -258,7 +188,7 @@
 
   function showMsg(type, text) {
     const cls = type === 'logout' ? 'alert-logout' : type === 'error' ? 'alert-error' : 'alert-success';
-    msgArea.innerHTML = `<div class="alert ${cls}">${text}</div>`;
+    msgArea.innerHTML = `<div class="${cls}" style="padding: 11px 14px; border-radius: 9px; font-size: .88rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">${text}</div>`;
   }
 
   // ── Tab switch ────────────────────────────────────────────────────────────
@@ -295,11 +225,11 @@
     if (/[^A-Za-z0-9]/.test(val)) score++;
 
     const levels = [
-      { pct:'20%', color:'#ef4444', text:'Weak' },
+      { pct:'20%', color:'var(--danger)', text:'Weak' },
       { pct:'40%', color:'#f97316', text:'Fair' },
-      { pct:'60%', color:'#f59e0b', text:'Good' },
-      { pct:'80%', color:'#10b981', text:'Strong' },
-      { pct:'100%',color:'#06b6d4', text:'Very Strong' },
+      { pct:'60%', color:'var(--warning)', text:'Good' },
+      { pct:'80%', color:'var(--success)', text:'Strong' },
+      { pct:'100%',color:'var(--accent2)', text:'Very Strong' },
     ];
     const lv = levels[Math.max(0, score - 1)];
     fill.style.width      = lv.pct;

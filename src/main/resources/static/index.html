@@ -86,18 +86,18 @@
       <!-- Dashboard grid: chart + upcoming -->
       <div class="dashboard-grid">
         <div class="card">
-          <div class="card-title">📊 Spending by Category</div>
+          <div class="card-title">Spending by Category</div>
           <div class="chart-wrap">
             <canvas id="spendingChart"></canvas>
           </div>
           <div id="chart-empty" class="empty-state" style="display:none;">
-            <div class="empty-icon">📊</div>
+            <div class="empty-icon"></div>
             <p>Add subscriptions to see your spending chart</p>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">🔔 Upcoming Renewals</div>
+          <div class="card-title">Upcoming Renewals</div>
           <div id="upcoming-list">
             <div class="spinner"></div>
           </div>
@@ -113,13 +113,13 @@
           <p class="page-subtitle">Manage all your recurring expenses</p>
         </div>
         <button class="btn btn-primary" onclick="toggleAddForm()">
-          ＋ Add New
+          Add New
         </button>
       </div>
 
       <!-- Add form (hidden by default) -->
       <div class="card mt-16" id="add-form-card" style="display:none; margin-bottom:20px;">
-        <div class="card-title">➕ Add Subscription</div>
+        <div class="card-title">Add Subscription</div>
         <div class="form-grid">
           <div class="form-group">
             <label for="f-name">Service Name *</label>
@@ -253,7 +253,7 @@
       <div class="settings-group">
         <!-- Home currency -->
         <div class="settings-row">
-          <label>🏠 Home Currency</label>
+          <label>Home Currency</label>
           <p class="text-sm text-muted" style="margin-bottom:10px;">
             All totals and charts are shown in this currency
           </p>
@@ -265,7 +265,7 @@
 
         <!-- Budget limit -->
         <div class="settings-row">
-          <label>💰 Monthly Budget Limit</label>
+          <label>Monthly Budget Limit</label>
           <p class="text-sm text-muted" style="margin-bottom:10px;">
             You'll see a warning when total spending exceeds this amount
           </p>
@@ -277,7 +277,7 @@
 
         <!-- Info -->
         <div class="settings-row">
-          <label>ℹ️ About SpendWise</label>
+          <label>ℹ About SpendWise</label>
           <p class="text-sm text-muted">Version 2.0 &nbsp;|&nbsp; Java 26 + Spring Boot 3.4</p>
           <p class="text-sm text-muted" style="margin-top:4px;">Database: ~/spendwise.db (SQLite) &nbsp;|&nbsp; Currency
             API: Frankfurter.app</p>
@@ -295,16 +295,16 @@
   <!-- ══ Mobile bottom navigation ═══════════════════════════════════════ -->
   <nav class="mobile-bottom-nav">
     <button class="mob-nav-btn active" id="mob-dashboard" onclick="navigate('dashboard')">
-      <span class="mob-icon">🏠</span> Home
+      <span class="mob-icon"></span> Home
     </button>
     <button class="mob-nav-btn" id="mob-subscriptions" onclick="navigate('subscriptions')">
-      <span class="mob-icon">📋</span> Subs
+      <span class="mob-icon"></span> Subs
     </button>
     <button class="mob-nav-btn" id="mob-converter" onclick="navigate('converter')">
-      <span class="mob-icon">💱</span> Convert
+      <span class="mob-icon"></span> Convert
     </button>
     <button class="mob-nav-btn" id="mob-settings" onclick="navigate('settings')">
-      <span class="mob-icon">⚙️</span> Settings
+      <span class="mob-icon"></span> Settings
     </button>
   </nav>
 
