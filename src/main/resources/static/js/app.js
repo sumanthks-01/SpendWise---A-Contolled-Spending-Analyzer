@@ -240,7 +240,7 @@ async function refreshDashboard() {
       budgetEl.className = 'stat-value ' + (totalData.overBudget ? 'danger' : 'success');
     }
     if (budgetStatus) {
-      budgetStatus.textContent = totalData.overBudget ? '⚠️ Over budget!' : '✅ Within budget';
+      budgetStatus.textContent = totalData.overBudget ? 'Over budget!' : 'Within budget';
       budgetStatus.className = 'stat-hint ' + (totalData.overBudget ? 'danger' : 'success');
     }
 
@@ -273,7 +273,7 @@ function renderUpcoming(upcoming, home) {
   if (!el) return;
 
   if (upcoming.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🎉</div><p>No renewals in the next 7 days</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><p>No renewals in the next 7 days</p></div>`;
     return;
   }
 
@@ -285,7 +285,7 @@ function renderUpcoming(upcoming, home) {
   // Add alert for urgent renewals
   if (urgentRenewals.length > 0) {
     const alertVariant = urgentRenewals.some(s => s.daysUntilRenewal === 0) ? 'error' : 'warning';
-    const alertIcon = urgentRenewals.some(s => s.daysUntilRenewal === 0) ? '⚠️' : '🔔';
+    const alertIcon = '';
     const alertTitle = urgentRenewals.some(s => s.daysUntilRenewal === 0) 
       ? 'Renewals Due Today!' 
       : 'Renewals Due Tomorrow';
@@ -418,7 +418,7 @@ function renderSubscriptionsTable(subs, home) {
       <td data-label="Cycle">${s.billingCycle || 'Monthly'}</td>
       <td data-label="Action">
         <button class="btn btn-danger" style="padding:6px 12px;font-size:.8rem;"
-                onclick="deleteSubscription(${s.id}, '${esc(s.name)}')">🗑</button>
+                onclick="deleteSubscription(${s.id}, '${esc(s.name)}')">Remove</button>
       </td>
     </tr>`;
   }).join('');
@@ -464,7 +464,7 @@ async function addSubscription() {
       billingCycle: cycle
     });
 
-    toast('✅ ' + name + ' added successfully!', 'success');
+    toast(name + ' added successfully!', 'success');
     clearAddForm();
     toggleAddForm();
     await loadSubscriptions();
@@ -476,7 +476,7 @@ async function addSubscription() {
 
 function showFormError(msg) {
   const el = document.getElementById('form-error');
-  if (el) { el.textContent = '⚠️ ' + msg; el.style.display = 'block'; }
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
 }
 
 function hideFormError() {
@@ -498,7 +498,7 @@ async function deleteSubscription(id, name) {
   if (!confirm(`Delete "${name}"?`)) return;
   try {
     await api('DELETE', `/api/subscriptions/${id}`);
-    toast(`🗑️ ${name} removed`, 'info');
+    toast(`${name} removed`, 'info');
     await loadSubscriptions();
     await refreshDashboard();
   } catch (e) {
@@ -566,7 +566,7 @@ async function loadRates() {
         `).join('');
     }
   } catch (e) {
-    if (grid) grid.innerHTML = `<p class="text-muted text-sm">⚠️ Live rates unavailable. Check internet connection.</p>`;
+    if (grid) grid.innerHTML = `<p class="text-muted text-sm">Live rates unavailable. Check internet connection.</p>`;
   }
 }
 
@@ -604,7 +604,7 @@ function logout() {
 function createAlert(options) {
   const {
     variant = 'neutral',
-    icon = 'ℹ️',
+    icon = '',
     title = '',
     description = '',
     actions = [],
