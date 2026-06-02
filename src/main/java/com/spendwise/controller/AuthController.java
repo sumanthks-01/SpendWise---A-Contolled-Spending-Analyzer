@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import com.spendwise.service.EmailService;
 
 /**
  * Handles login page serving, signup form submission, and user info API.
@@ -86,6 +87,59 @@ public class AuthController {
                 "email",   user.getEmail(),
                 "initials", initials(user.getName())
         );
+    }
+
+    @Autowired private EmailService emailService;
+    @org.springframework.beans.factory.annotation.Value("${app.base-url}")
+    private String appBaseUrl;
+
+    // ── Forgot Password ────────────────────────────────────────────────────────
+    @GetMapping("/forgot-password")
+    public String forgotPasswordPage() {
+        return "forward:/forgot-password.html";
+    }
+
+    @PostMapping("/auth/forgot-password")
+    public String processForgotPassword(@RequestParam String email) {
+        try {
+            String token = userService.createPasswordResetToken(email.trim().toLowerCase());
+            User user = userService.findByEmail(email.trim().toLowerCase());
+            String resetLink = appBaseUrl + "/reset-password?token=" + token;
+            
+            // Send email
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), resetLink);
+        } catch (Exception e) {
+            // Ignore error or log it. We still return success to prevent email enumeration.
+        }
+        return "redirect:/forgot-password?success=true";
+    }
+
+    // ── Reset Password ────────────────────────────────────────────────────────
+    @GetMapping("/reset-password")
+    public String resetPasswordPage() {
+        return "forward:/reset-password.html";
+    }
+
+    @PostMapping("/auth/reset-password")
+    public String processResetPassword(
+            @RequestParam String token,
+            @RequestParam String password,
+            @RequestParam("confirm_password") String confirmPassword) {
+        
+        if (!password.equals(confirmPassword)) {
+            return "redirect:/reset-password?token=" + token + "&error=mismatch";
+        }
+        if (password.length() < 6) {
+            return "redirect:/reset-password?token=" + token + "&error=short";
+        }
+
+        try {
+            userService.resetPassword(token, password);
+            return "redirect:/login?resetSuccess=true";
+        } catch (IllegalArgumentException e) {
+            // e.getMessage() could be "Invalid token.", "expired", etc.
+            return "redirect:/reset-password?token=" + token + "&error=invalid";
+        }
     }
 
     private String initials(String name) {

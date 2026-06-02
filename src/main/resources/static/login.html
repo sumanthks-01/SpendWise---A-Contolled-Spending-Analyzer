@@ -173,7 +173,10 @@
             autocomplete="email" />
         </div>
         <div class="form-group">
-          <label for="l-password">Password</label>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label for="l-password">Password</label>
+            <a href="/forgot-password" style="font-size: 0.82rem; color: var(--accent); text-decoration: none;">Forgot password?</a>
+          </div>
           <div class="input-wrap">
             <input class="form-control" id="l-password" name="password" type="password" placeholder="••••••••" required
               autocomplete="current-password" style="padding-right:40px;" />
@@ -261,6 +264,9 @@
     }
     if (params.get('logout') === 'true') {
       showMsg('logout', 'You have been signed out successfully.');
+    }
+    if (params.get('resetSuccess') === 'true') {
+      showMsg('success', 'Password successfully reset. You can now log in.');
     }
 
     // Flash from server redirect (signup errors come via URL fragment hack)

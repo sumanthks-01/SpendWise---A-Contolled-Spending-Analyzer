@@ -61,6 +61,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Email for Forgot Password -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
+
     <!-- Dev tools (live reload) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

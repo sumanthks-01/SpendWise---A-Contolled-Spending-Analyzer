@@ -43,4 +43,42 @@ public class UserService {
         user.setBudgetLimit(limit);
         userRepository.save(user);
     }
+
+    @Autowired private com.spendwise.repository.PasswordResetTokenRepository tokenRepository;
+
+    @org.springframework.transaction.annotation.Transactional
+    public String createPasswordResetToken(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No account found with that email."));
+
+        // Clean up any old tokens for this user
+        tokenRepository.deleteByUser(user);
+
+        String token = java.util.UUID.randomUUID().toString();
+        com.spendwise.model.PasswordResetToken myToken = new com.spendwise.model.PasswordResetToken(
+                token, user, java.time.LocalDateTime.now().plusMinutes(15)
+        );
+        tokenRepository.save(myToken);
+        return token;
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void resetPassword(String token, String newPassword) {
+        com.spendwise.model.PasswordResetToken resetToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid token."));
+
+        if (resetToken.isUsed()) {
+            throw new IllegalArgumentException("This reset link has already been used.");
+        }
+        if (resetToken.getExpiresAt().isBefore(java.time.LocalDateTime.now())) {
+            throw new IllegalArgumentException("This reset link has expired.");
+        }
+
+        User user = resetToken.getUser();
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        resetToken.setUsed(true);
+        tokenRepository.save(resetToken);
+    }
 }
