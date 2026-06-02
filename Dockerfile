@@ -1,27 +1,23 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY pom.xml .
-
 # Install Maven
 RUN apk add --no-cache maven
 
-# Copy source code
+# Copy pom.xml and download dependencies first (layer caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline -q
+
+# Copy source and build
 COPY src ./src
+RUN mvn clean package -DskipTests -q
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Runtime stage
+# ── Runtime stage ──────────────────────────────────────────────────────────────
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy the built jar from build stage
 COPY --from=build /app/target/SpendWise.jar app.jar
 
-# Expose port
 EXPOSE 8080
 
-# Run the application
-CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -Dspring.profiles.active=prod -jar app.jar"]

@@ -1,142 +1,57 @@
-# SpendWise - Render Deployment Checklist
+# SpendWise – Railway Deployment Guide
 
-## ✅ Pre-Deployment Checklist
+## Configuration Files
+- `railway.toml` – Railway build & deploy config
+- `Dockerfile` – Container build (auto-activates `prod` profile)
+- `application.properties` – Local dev config (H2 database)
+- `application-prod.properties` – Production config (PostgreSQL)
 
-### 1. Code Repository
-- [ ] Push all code to GitHub
-- [ ] Ensure `main` branch is up to date
-- [ ] Verify `.gitignore` excludes sensitive files
+## Deployment Steps
 
-### 2. Configuration Files
-- [x] `render.yaml` - Render configuration
-- [x] `build.sh` - Build script
-- [x] `application.properties` - Local config (H2)
-- [x] `application-prod.properties` - Production config (PostgreSQL)
-- [x] `pom.xml` - Maven dependencies
-
-### 3. Dependencies
-- [x] PostgreSQL driver included
-- [x] Spring Boot Web
-- [x] Spring Security
-- [x] Spring Data JPA
-
-### 4. Static Assets
-- [x] Logo files in `/images/`
-- [x] Favicon configured
-- [x] CSS files
-- [x] JavaScript files
-
-## 🚀 Deployment Steps
-
-### Step 1: Push to GitHub
+### 1. Push to GitHub
 ```bash
-git init
 git add .
-git commit -m "Ready for Render deployment"
-git branch -M main
-git remote add origin <your-github-repo-url>
-git push -u origin main
+git commit -m "feat: switch to Railway deployment"
+git push
 ```
 
-### Step 2: Create Render Account
-1. Go to https://render.com
-2. Sign up with GitHub
-3. Authorize Render to access your repositories
+### 2. Create Railway Project
+1. Go to https://railway.app and sign in with GitHub
+2. Click **New Project** → **Deploy from GitHub repo**
+3. Select your SpendWise repository
+4. Railway detects the `Dockerfile` and starts building automatically
 
-### Step 3: Deploy on Render
-1. Click "New +" → "Blueprint"
-2. Connect your GitHub repository
-3. Render will detect `render.yaml` automatically
-4. Click "Apply"
-5. Wait for deployment (5-10 minutes)
+### 3. Add PostgreSQL Database
+Inside your Railway project, click **+ New → Database → Add PostgreSQL**.
+Railway automatically injects `DATABASE_URL` into your service.
 
-### Step 4: Verify Deployment
-- [ ] Application is running
-- [ ] Database is connected
-- [ ] Static files are loading
-- [ ] API endpoints are working
-- [ ] Login/authentication works
+### 4. Set Environment Variables
+In your Web Service → **Variables** tab, add:
 
-## 🔧 Environment Variables (Auto-configured)
+| Variable | Value |
+|----------|-------|
+| `SPRING_PROFILES_ACTIVE` | `prod` |
+| `GOOGLE_CLIENT_ID` | your Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | your Google OAuth client secret |
+| `MAIL_USERNAME` | spendwise.app.noreply@gmail.com |
+| `MAIL_PASSWORD` | your Gmail App Password |
+| `APP_BASE_URL` | https://your-app.up.railway.app |
 
-Render automatically sets:
-- `SPRING_PROFILES_ACTIVE=prod`
-- `JDBC_DATABASE_URL` (from PostgreSQL)
-- `PORT` (assigned by Render)
-- `JAVA_TOOL_OPTIONS=-Xmx512m -Xms256m`
+> `DATABASE_URL` is set automatically — do not add it manually.
 
-## 📊 Post-Deployment
-
-### Monitor Your Application
-- View logs: Render Dashboard → Your Service → Logs
-- Check metrics: Dashboard → Metrics
-- Health check: `https://your-app.onrender.com/`
-
-### Database Management
-- Access PostgreSQL: Render Dashboard → Database → Connect
-- Connection string available in dashboard
-- Use pgAdmin or DBeaver for GUI access
-
-## 🐛 Troubleshooting
-
-### Build Fails
-```bash
-# Locally test the build
-./build.sh
+### 5. Update Google OAuth
+In [Google Cloud Console](https://console.cloud.google.com), add your Railway URL to **Authorized Redirect URIs**:
+```
+https://your-app.up.railway.app/login/oauth2/code/google
 ```
 
-### Application Won't Start
-- Check logs in Render Dashboard
-- Verify Java version (21)
-- Ensure PostgreSQL is running
+## Troubleshooting
 
-### Database Connection Issues
-- Verify `JDBC_DATABASE_URL` is set
-- Check PostgreSQL status in Render
-- Review connection logs
+- **Build fails** → Check Railway build logs; ensure Java 21 is used
+- **DB connection error** → Verify `DATABASE_URL` is present in Variables
+- **OAuth not working** → Check the redirect URI is added in Google Cloud Console
+- **Email not sending** → Confirm `MAIL_USERNAME` and `MAIL_PASSWORD` are correct
 
-### Static Files Not Loading
-- Verify files are in `src/main/resources/static/`
-- Check file paths in HTML
-- Clear browser cache
-
-## 📝 Important URLs
-
-After deployment, your app will be available at:
-- **Application**: `https://spendwise.onrender.com`
-- **API Base**: `https://spendwise.onrender.com/api`
-- **Health Check**: `https://spendwise.onrender.com/`
-
-## 🔐 Security Notes
-
-- Never commit database credentials
-- Use environment variables for sensitive data
-- Enable HTTPS (automatic on Render)
-- Keep dependencies updated
-
-## 💡 Tips
-
-1. **Free Tier Limitations**:
-   - App sleeps after 15 minutes of inactivity
-   - First request after sleep takes ~30 seconds
-   - 750 hours/month free
-
-2. **Performance**:
-   - Use connection pooling
-   - Enable caching where appropriate
-   - Optimize database queries
-
-3. **Monitoring**:
-   - Set up health checks
-   - Monitor error logs
-   - Track response times
-
-## 📞 Support
-
-- Render Docs: https://render.com/docs
-- Spring Boot Docs: https://spring.io/projects/spring-boot
-- GitHub Issues: Create an issue in your repository
-
----
-
-✅ Your SpendWise application is now ready for Render deployment!
+## Useful URLs After Deployment
+- **App**: `https://your-app.up.railway.app`
+- **Health check**: `https://your-app.up.railway.app/`
