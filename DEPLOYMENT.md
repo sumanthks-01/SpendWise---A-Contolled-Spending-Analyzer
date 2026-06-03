@@ -47,7 +47,7 @@ https://your-app.up.railway.app/login/oauth2/code/google
 
 ## Troubleshooting
 
-- **Build fails** → Check Railway build logs; ensure Java 21 is used
+- **Build fails** → Check Railway build logs; ensure Java 25 is used
 - **DB connection error** → Verify `DATABASE_URL` is present in Variables
 - **OAuth not working** → Check the redirect URI is added in Google Cloud Console
 - **Email not sending** → Confirm `MAIL_USERNAME` and `MAIL_PASSWORD` are correct
