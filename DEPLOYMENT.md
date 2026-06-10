@@ -51,7 +51,7 @@ Monitor progress under **Logs** in the Render Dashboard.
 
 ## Troubleshooting
 
-- **Build fails** → Check Render build logs; ensure the Dockerfile uses `eclipse-temurin:25-jdk-alpine`
+- **Build fails** → Check Render build logs; ensure the Dockerfile uses `eclipse-temurin:26-jdk-alpine`
 - **DB connection error** → Verify `DATABASE_URL` is linked from the Render Postgres service in Environment settings
 - **OAuth not working** → Confirm the redirect URI exactly matches in Google Cloud Console
 - **Email not sending** → Confirm `MAIL_USERNAME` and `MAIL_PASSWORD` are correct; use a Gmail App Password (not your account password)

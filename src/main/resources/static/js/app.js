@@ -259,6 +259,9 @@ async function refreshDashboard() {
     // Upcoming list
     renderUpcoming(upcoming, home);
 
+    // Budget bar
+    renderBudgetBar(totalData);
+
     // Chart
     renderChart(chartData, home);
 
@@ -319,6 +322,31 @@ function renderUpcoming(upcoming, home) {
   el.innerHTML = html;
 }
 
+function renderBudgetBar(totalData) {
+  const wrap    = document.getElementById('budget-bar-wrap');
+  const fill    = document.getElementById('budget-bar-fill');
+  const pctEl   = document.getElementById('budget-bar-pct');
+  const labelEl = document.getElementById('budget-bar-label');
+  if (!wrap || !fill || !totalData) return;
+
+  const total  = Number(totalData.total || 0);
+  const limit  = Number(totalData.budgetLimit || 0);
+  if (limit <= 0) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = 'block';
+  const pct = Math.min((total / limit) * 100, 100);
+
+  fill.style.width = pct + '%';
+  fill.className = 'budget-bar-fill' + (pct >= 100 ? ' danger' : pct >= 80 ? ' warning' : '');
+  pctEl.textContent = pct.toFixed(0) + '%';
+
+  const home = state.settings.home_currency || 'INR';
+  if (labelEl) {
+    labelEl.textContent = `${sym(home)}${total.toLocaleString('en-IN', {minimumFractionDigits:2})} of ${sym(home)}${limit.toLocaleString('en-IN')} monthly budget`;
+  }
+}
+
+
 function renderChart(data, home) {
   const canvas = document.getElementById('spendingChart');
   const emptyEl = document.getElementById('chart-empty');
@@ -336,7 +364,7 @@ function renderChart(data, home) {
   canvas.style.display = 'block';
   if (emptyEl) emptyEl.style.display = 'none';
 
-  const COLORS = ['#7c3aed','#06b6d4','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6','#f97316'];
+  const COLORS = ['#7084ff','#3dd6f5','#22c55e','#f59e0b','#ef4444','#a78bfa','#14b8a6','#f97316'];
 
   if (state.chart) { state.chart.destroy(); state.chart = null; }
 
@@ -348,7 +376,7 @@ function renderChart(data, home) {
         data: values,
         backgroundColor: COLORS.slice(0, labels.length),
         borderWidth: 2,
-        borderColor: '#1c2128'
+        borderColor: '#191919'
       }]
     },
     options: {
@@ -356,7 +384,7 @@ function renderChart(data, home) {
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 }, padding: 12 }
+          labels: { color: '#a7a9ac', font: { family: 'Inter', size: 11 }, padding: 14, boxWidth: 10, borderRadius: 3 }
         },
         tooltip: {
           callbacks: {

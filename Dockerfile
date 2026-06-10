@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
 # Install Maven
@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests -q
 
 # ── Runtime stage ──────────────────────────────────────────────────────────────
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/target/SpendWise.jar app.jar
