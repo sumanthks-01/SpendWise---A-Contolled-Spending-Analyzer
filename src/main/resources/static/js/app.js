@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════════
-   SpendWise v2.0 – Frontend App Logic
+   SpendWise – Frontend App Logic
    All API calls → Spring Boot on http://localhost:8080
    ════════════════════════════════════════════════════════════════════ */
 

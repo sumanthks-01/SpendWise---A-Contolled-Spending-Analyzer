@@ -191,7 +191,16 @@ body::after {
   flex-shrink: 0;
 }
 
-.nav-btn .nav-icon { display: none; }
+.nav-btn .nav-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  opacity: 0.7;
+  transition: opacity var(--t);
+}
+.nav-btn.active .nav-icon {
+  opacity: 1;
+}
 
 .sidebar-footer {
   padding: 16px 20px;
@@ -315,7 +324,9 @@ body::after {
 }
 
 .stat-card {
-  background: var(--surface);
+  background: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   padding: 24px;
@@ -382,11 +393,19 @@ body::after {
 }
 
 .card {
-  background: var(--surface);
+  background: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   padding: 28px;
   position: relative;
+  transition: border-color var(--t), box-shadow var(--t), transform var(--t);
+}
+.card:hover {
+  border-color: rgba(112, 132, 255, 0.25);
+  box-shadow: var(--glow-sm);
+  transform: translateY(-2px);
 }
 
 .card-title {
@@ -771,7 +790,17 @@ tbody tr:last-child td { border-bottom: none; }
   transition: all var(--t);
 }
 
-.mob-nav-btn .mob-icon { font-size: 1.2rem; }
+.mob-nav-btn .mob-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  opacity: 0.7;
+  transition: opacity var(--t);
+  margin-bottom: 2px;
+}
+.mob-nav-btn.active .mob-icon {
+  opacity: 1;
+}
 .mob-nav-btn.active {
   color: var(--color-signal-violet);
 }
