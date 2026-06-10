@@ -19,7 +19,7 @@ Key entities:
 
 ## Deployment
 
-- Containerized via `Dockerfile` and orchestrated by your chosen platform (Kubernetes, Railway, etc.).
+- Containerized via `Dockerfile` and deployed to [Render](https://render.com) using `render.yaml` Blueprint.
 - Externalize configuration with environment variables and cloud secrets.
 
 ## Scaling and Observability
