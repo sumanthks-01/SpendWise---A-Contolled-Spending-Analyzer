@@ -2,7 +2,7 @@
 
 > **Smart Subscription & Expense Tracker**
 
-SpendWise is a premium, modern web application designed to help you track your subscriptions, manage recurring expenses, and stay within your budget. Built with Java 21, Spring Boot, and a sleek dark-themed UI, SpendWise offers multi-currency support and real-time live exchange rates.
+SpendWise is a premium, modern web application designed to help you track your subscriptions, manage recurring expenses, and stay within your budget. Built with Java 25, Spring Boot, and a sleek dark-themed UI, SpendWise offers multi-currency support and real-time live exchange rates.
 
 ## ✨ Features
 
@@ -17,7 +17,7 @@ SpendWise is a premium, modern web application designed to help you track your s
 
 ## 🛠 Technology Stack
 
-- **Backend**: Java 21, Spring Boot 3.4, Spring Security, Spring Data JPA
+- **Backend**: Java 25, Spring Boot 3.4, Spring Security, Spring Data JPA
 - **Frontend**: Vanilla HTML/CSS/JS, Chart.js for visualizations
 - **Database**: 
   - Local Development: H2 In-Memory Database (zero setup required)
@@ -27,7 +27,7 @@ SpendWise is a premium, modern web application designed to help you track your s
 ## 🚀 Getting Started (Local Development)
 
 ### Prerequisites
-- JDK 21+
+- JDK 25+
 - Maven 3.8+
 
 ### Setup

@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: spendwise
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: APP_BASE_URL
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spendwise-db
+          property: connectionString
+
+databases:
+  - name: spendwise-db
+    plan: free
+    databaseName: spendwise
+    user: spendwise
