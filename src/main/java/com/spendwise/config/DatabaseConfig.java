@@ -9,10 +9,13 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 @Configuration
 @Profile("prod")
 public class DatabaseConfig {
+
+    private static final Logger LOGGER = Logger.getLogger(DatabaseConfig.class.getName());
 
     @Value("${DATABASE_URL:}")
     private String databaseUrl;
@@ -20,9 +23,10 @@ public class DatabaseConfig {
     @Bean
     public DataSource dataSource() throws URISyntaxException {
         if (databaseUrl == null || databaseUrl.isEmpty()) {
-            throw new IllegalArgumentException("DATABASE_URL is not set");
+            throw new IllegalArgumentException("DATABASE_URL environment variable is not set!");
         }
 
+        LOGGER.info("Parsing DATABASE_URL for PostgreSQL configuration...");
         URI dbUri = new URI(databaseUrl);
         
         String username = "";
@@ -36,7 +40,10 @@ public class DatabaseConfig {
         }
 
         String port = dbUri.getPort() != -1 ? ":" + dbUri.getPort() : "";
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + port + dbUri.getPath();
+        String query = dbUri.getQuery() != null ? "?" + dbUri.getQuery() : "";
+        
+        // Build valid JDBC PostgreSQL URL preserving paths and query parameters (e.g. SSL options)
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + port + dbUri.getPath() + query;
 
         return DataSourceBuilder.create()
                 .url(dbUrl)

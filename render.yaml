@@ -1,13 +1,18 @@
+# Render Blueprint Configuration (render.yaml)
+# This file defines the infrastructure to deploy both the Spring Boot app and the PostgreSQL database.
+
 services:
   - type: web
     name: spendwise
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    plan: free
-    healthCheckPath: /
+    runtime: docker               # Builds the application using the Dockerfile
+    dockerfilePath: ./Dockerfile   # Path to the Dockerfile
+    plan: free                    # Deploys on Render's free tier
+    healthCheckPath: /            # Health check endpoint for zero-downtime deploys
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      
+      # The following environment variables will be prompted for input in the Render dashboard:
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
@@ -18,6 +23,8 @@ services:
         sync: false
       - key: APP_BASE_URL
         sync: false
+      
+      # Bind the DATABASE_URL to the Postgres service defined below:
       - key: DATABASE_URL
         fromDatabase:
           name: spendwise-db

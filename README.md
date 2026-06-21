@@ -56,16 +56,9 @@ SpendWise is a premium, modern web application designed to help you track your s
 
 ## ☁️ Deployment (Render)
 
-SpendWise is configured for seamless deployment to [Render](https://render.com/).
+SpendWise is configured for seamless production deployment to [Render](https://render.com/) using a Blueprint template (Web Service + PostgreSQL Database). 
 
-1. Connect your GitHub repository to Render.
-2. Create a new **Web Service**.
-3. Render will automatically detect the `render.yaml` and `Dockerfile`.
-4. Create a **PostgreSQL** database on Render and attach it to your Web Service.
-5. Add the following Environment Variables in your Render Dashboard:
-   - `DATABASE_URL` (provided by Render Postgres)
-   - `GOOGLE_CLIENT_ID`
-   - `GOOGLE_CLIENT_SECRET`
+For step-by-step setup and configuration instructions, refer to the detailed [Render Deployment Guide](file:///d:/Project/SpendWise/DEPLOYMENT.md).
 
 ## 📄 License
 
